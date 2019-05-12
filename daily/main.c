@@ -1,51 +1,130 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define MAXSIZE 100
+using namespace std;
 
-typedef struct
+typedef  int DataType;
+typedef struct stStack
 {
-int vertex[MAXSIZE];
-int edgs[MAXSIZE][MAXSIZE];
-}MGraph;
+    DataType data;
+    struct stStack* pTop;
+}STACK;
 
-void creatgraph(MGraph* p,int n,int e)//n为节点数，e为边数
+/* 初始化栈*/
+STACK* initStack()
 {
-int i,j,k,x;
-printf(“input vertex \n”);
-for(i=0;i<n;i++)//设置化节点信息
-{
-scanf("%d",&x);
-p->vertex[i]=x;
-}
-for(j=0;j<n;j++)//初始化边关系
-for(i=0;i<n;i++)
-p->edgs[i][j]=0;
+    STACK* pNewNode = (STACK*)malloc(sizeof(STACK));
+    if (NULL != pNewNode)
+    {
+        pNewNode->data = 0;
+        pNewNode->pTop = NULL;
+    }
 
-for(k=1;k<=e;k++)
-{
-    printf("input edge of(i,j)\n");
-    scanf("%d%d",&i,&j);
-    p->edgs[i][j]=1;
-    p->edgs[j][i]=1;
-}
-for(k=1;k<=e;k++)
-{
-    printf("input edge of(i,j)\n");
-    scanf("%d%d",&i,&j);
-    p->edgs[i][j]=1;
-    p->edgs[j][i]=1;
+    return pNewNode;
 }
 
+/* 入栈操作 */
+STACK* pushStack(STACK* pHead, DataType paraData)
+{
+    STACK* pNewNode = (STACK*)malloc(sizeof(STACK));
+    if (NULL == pNewNode)
+    {
+        return NULL;
+    }
+    pNewNode->data = paraData;
+    pNewNode->pTop = pHead;
+
+    pHead = pNewNode;
+    return pHead;
+}
+
+/* 出栈操作 */
+STACK* popStack(STACK* pHead, DataType* outData)
+{
+    /* 如果栈为空 */
+    if (NULL == pHead->pTop)
+    {
+        return NULL;
+    }
+
+    /* 把数据传出去 */
+    *outData = pHead->data;
+    STACK* pTemp = pHead;
+
+    pHead = pHead->pTop;
+
+    /* 把头删除 */
+    delete pTemp;
+
+    return pHead;
+}
+
+/* 返回栈顶元素值 */
+int getTopStack(STACK* pHead, DataType* outData)
+{
+    /* 如果栈为空 */
+    if (NULL == pHead->pTop)
+    {
+        return -1;
+    }
+
+    *outData = pHead->data;
+    return 0;
+}
+/* 遍历栈的操作 */
+int visitStack(STACK* pHead)
+{
+    STACK* pTemp = pHead;
+
+    /* 判断栈是否为空 */
+    if (NULL == pHead->pTop)
+    {
+        printf("This stack is empty\n");
+        return -1;
+    }
+
+    while (NULL != pTemp->pTop)
+    {
+        printf("%d ", pTemp->data);
+        pTemp = pTemp->pTop;
+    }
+    printf("\n");
+}
+/* 清空栈 */
+STACK* destoryStack(STACK* pHead)
+{
+    STACK* pTemp = NULL;
+    while (NULL != pHead->pTop)
+    {
+        pTemp = pHead;
+        pHead = pHead->pTop;
+        delete pTemp;
+    }
+    return pHead;
+}
 int main()
 {
-int i,j;
-MGraph M,*p=&M;
-creatgraph(p,4,4);
-for(i=0;i<4;i++)
-{
-printf("\n");
-for(j=0;j<4;j++)
-printf("%4d",M.edgs[i][j]);
-}
-return 0;
+    DataType num = 0;
+    STACK* pHead = initStack();
+
+    /* 入栈 */
+    pHead = pushStack(pHead, 3);
+    pHead = pushStack(pHead, 10);
+    pHead = pushStack(pHead, 55);
+
+    visitStack(pHead);
+
+    /* 出栈 */
+    pHead = popStack(pHead, &num);
+    visitStack(pHead);
+
+    /* 返回栈顶的元素 */
+    getTopStack(pHead, &num);
+    printf("%d\n", num);
+
+    /* 销毁栈 */
+    pHead = destoryStack(pHead);
+    visitStack(pHead);
+
+
+    return 0;
 }
