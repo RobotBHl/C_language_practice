@@ -1,26 +1,51 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define MAXSIZE 100
+
+typedef struct
+{
+int vertex[MAXSIZE];
+int edgs[MAXSIZE][MAXSIZE];
+}MGraph;
+
+void creatgraph(MGraph* p,int n,int e)//n为节点数，e为边数
+{
+int i,j,k,x;
+printf(“input vertex \n”);
+for(i=0;i<n;i++)//设置化节点信息
+{
+scanf("%d",&x);
+p->vertex[i]=x;
+}
+for(j=0;j<n;j++)//初始化边关系
+for(i=0;i<n;i++)
+p->edgs[i][j]=0;
+
+for(k=1;k<=e;k++)
+{
+    printf("input edge of(i,j)\n");
+    scanf("%d%d",&i,&j);
+    p->edgs[i][j]=1;
+    p->edgs[j][i]=1;
+}
+for(k=1;k<=e;k++)
+{
+    printf("input edge of(i,j)\n");
+    scanf("%d%d",&i,&j);
+    p->edgs[i][j]=1;
+    p->edgs[j][i]=1;
+}
 
 int main()
 {
-     int m,n,i,j,t,k;
-
-    while(scanf("%d",&k)!=EOF)
-    {
-        getchar();
-        __int64 str[50]={0,1,1};
-
-        for(j=1;j<=k;j++)
-        {
-          scanf("%d %d",&m,&n);
-          t=n-m+1;
-          for(i=3;i<=t;i++)
-          {
-           str[i]=str[i-1]+str[i-2];
-          }
-          printf("%I64d\n",str[t]);
-        }
-
-    }
-    return 0;
+int i,j;
+MGraph M,*p=&M;
+creatgraph(p,4,4);
+for(i=0;i<4;i++)
+{
+printf("\n");
+for(j=0;j<4;j++)
+printf("%4d",M.edgs[i][j]);
+}
+return 0;
 }
